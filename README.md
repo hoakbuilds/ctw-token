@@ -1,6 +1,6 @@
 # Confidential Transfer Wrapped Token Program (CTW Token)
 
-This repository contains a Solana program built with the new SPL Token Extensions, the goal is to give users the ability to perform Confidential Transfers on so-called SPL Token Mints, along with a CLI and a small TS SDK to help potential integrations.
+This repository contains a Solana program built with the new SPL Token Extensions, the goal is to give users the ability to perform Confidential Transfers on SPL Token Mints OR SPL Token Extensions Mints which do not have the Confidential Transfers Extension, along with a CLI and a small TS SDK to help potential integrations.
 
 ## Program
 
@@ -11,7 +11,7 @@ The program features only three instructions:
   - All CTW Token Mints have the same number of decimals as their SPL Token Mint counterpart
   - The freeze authority of the existing SPL Token Mint is COPIED over to the CTW Mint, meaning if it is set it will also be set on the new Mint
 - Wrap
-  - This instruction allows wrapping a given amount of an Legacy Mint for the corresponding amount of the equivalent CTW Mint
+  - This instruction allows wrapping a given amount of an SPL Token Mint OR SPL Token Extensions Mint for the corresponding amount of the equivalent CTW Mint
   - An initialized and configured Confidential Transfer Account (CTA) must be passed in
   - The given amount of SPL Token is transferred from the user's Legacy Token Account into the program's vault and an equivalent amount of the CTW Token is minted into the public component of the CTA and instantly deposited
   - Integrators still need to execute `ApplyPendingBalance` after calling this instruction
