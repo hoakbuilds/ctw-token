@@ -5,9 +5,8 @@ use {
     },
     anchor_spl::{
         associated_token::AssociatedToken,
-        token::{Token},
         token_2022::{mint_to, MintTo},
-        token_interface::{initialize_mint2, Mint, TokenAccount, transfer_checked, TransferChecked},
+        token_interface::{initialize_mint2, Mint, TokenInterface, TokenAccount, transfer_checked, TransferChecked},
     },
     solana_program::{instruction::Instruction, program::invoke},
     spl_token_2022::{
@@ -69,18 +68,6 @@ pub fn initialize_confidential_transfer(
 }
 
 declare_id!("cwTokjpVjxBeytEXomNe5B38EesYsNsXCm3JZC6tmvB");
-
-/// The authority of the Confidential Transfer Wrapped Token Program.
-pub mod authority {
-    use ellipsis_macros::declare_pda;
-    use solana_program::pubkey::Pubkey;
-
-    declare_pda!(
-        "5txHjtUXKw716ZY4M5uCU7MG51htjMewqWr91uR8jyBz",
-        "cwTokjpVjxBeytEXomNe5B38EesYsNsXCm3JZC6tmvB",
-        "AUTHORITY"
-    );
-}
 
 #[derive(Clone)]
 pub struct TokenExtensions;
@@ -220,7 +207,7 @@ pub mod ctw_token {
                     to: ctx.accounts.confidential_token_account.to_account_info(),
                     authority: ctx.accounts.program_authority.to_account_info(),
                 },
-                &[&[AUTHORITY_SEED.as_ref(), &[authority::bump()]]],
+                &[&[AUTHORITY_SEED.as_ref(), &[ctx.bumps.program_authority]]],
             ),
             amount,
         )?;
@@ -285,7 +272,7 @@ pub mod ctw_token {
                     to: ctx.accounts.token_account.to_account_info(),
                     authority: ctx.accounts.program_authority.to_account_info(),
                 },
-                &[&[AUTHORITY_SEED.as_ref(), &[authority::bump()]]],
+                &[&[AUTHORITY_SEED.as_ref(), &[ctx.bumps.program_authority]]],
             ),
             amount,
             ctx.accounts.token_mint.decimals,
@@ -336,7 +323,7 @@ pub struct Initialize<'info> {
     pub payer: Signer<'info>,
 
     /// The Token Program.
-    pub token_program: Program<'info, Token>,
+    pub token_program: Interface<'info, TokenInterface>,
 
     /// The Associated Token Program.
     pub associated_token_program: Program<'info, AssociatedToken>,
@@ -399,7 +386,7 @@ pub struct Wrap<'info> {
     pub payer: Signer<'info>,
 
     /// The Token Interface.
-    pub token_program: Program<'info, Token>,
+    pub token_program: Interface<'info, TokenInterface>,
 
     /// The Token Interface.
     pub token_extensions_program: Program<'info, TokenExtensions>,
@@ -456,7 +443,7 @@ pub struct Unwrap<'info> {
     pub payer: Signer<'info>,
 
     /// The Token Interface.
-    pub token_program: Program<'info, Token>,
+    pub token_program: Interface<'info, TokenInterface>,
 
     /// The Token Interface.
     pub token_extensions_program: Program<'info, TokenExtensions>,
@@ -465,4 +452,9 @@ pub struct Unwrap<'info> {
 #[cfg(feature = "client")]
 pub fn derive_confidential_mint(token_mint: &Pubkey) -> (Pubkey, u8) {
     Pubkey::find_program_address(&[token_mint.as_ref(), MINT_SEED.as_ref()], &crate::id())
+}
+
+#[cfg(feature = "client")]
+pub fn derive_authority() -> (Pubkey, u8) {
+    Pubkey::find_program_address(&[AUTHORITY_SEED.as_ref()], &crate::id())
 }

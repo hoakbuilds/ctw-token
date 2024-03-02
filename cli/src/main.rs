@@ -38,7 +38,7 @@ use {
     clap::{Parser, Subcommand},
     ctw_token::{
         accounts::{Initialize, Unwrap, Wrap},
-        derive_confidential_mint,
+        derive_authority, derive_confidential_mint,
     },
     solana_client::rpc_client::RpcClient,
     solana_sdk::{
@@ -263,16 +263,17 @@ fn initialize(
 ) -> Result<Signature, Error> {
     let elgamal_keypair = ElGamalKeypair::new_from_signer(signer, "auditor".as_ref()).unwrap();
 
+    let (program_authority, _) = derive_authority();
     let (confidential_mint, _) = derive_confidential_mint(token_mint);
 
     println!("Confidnetial Wrapped Token Mint: {}", confidential_mint);
 
-    let token_vault = get_associated_token_address(&ctw_token::authority::ID, token_mint);
+    let token_vault = get_associated_token_address(&program_authority, token_mint);
 
     let ix = Instruction {
         accounts: Initialize {
             token_mint: *token_mint,
-            program_authority: ctw_token::authority::ID,
+            program_authority,
             confidential_mint,
             token_vault,
             payer: signer.pubkey(),
@@ -313,8 +314,9 @@ fn wrap(
     token_mint: &Pubkey,
     amount: u64,
 ) -> Result<Signature, Error> {
+    let (program_authority, _) = derive_authority();
     let (confidential_mint, _) = derive_confidential_mint(token_mint);
-    let token_vault = get_associated_token_address(&ctw_token::authority::ID, token_mint);
+    let token_vault = get_associated_token_address(&program_authority, token_mint);
     let confidential_token_account = get_associated_token_address_with_program_id(
         &signer.pubkey(),
         &confidential_mint,
@@ -348,7 +350,7 @@ fn wrap(
                     accounts: Wrap {
                         token_mint: *token_mint,
                         token_account,
-                        program_authority: ctw_token::authority::ID,
+                        program_authority: program_authority,
                         confidential_mint,
                         confidential_token_account,
                         token_vault,
@@ -379,7 +381,7 @@ fn wrap(
                 accounts: Wrap {
                     token_mint: *token_mint,
                     token_account,
-                    program_authority: ctw_token::authority::ID,
+                    program_authority: program_authority,
                     confidential_mint,
                     confidential_token_account,
                     token_vault,
@@ -421,8 +423,9 @@ fn unwrap(
     token_mint: &Pubkey,
     amount: u64,
 ) -> Result<Signature, Error> {
+    let (program_authority, _) = derive_authority();
     let (confidential_mint, _) = derive_confidential_mint(token_mint);
-    let token_vault = get_associated_token_address(&ctw_token::authority::ID, token_mint);
+    let token_vault = get_associated_token_address(&program_authority, token_mint);
     let confidential_token_account = get_associated_token_address_with_program_id(
         &signer.pubkey(),
         &confidential_mint,
@@ -456,7 +459,7 @@ fn unwrap(
                     accounts: Unwrap {
                         token_mint: *token_mint,
                         token_account,
-                        program_authority: ctw_token::authority::ID,
+                        program_authority: program_authority,
                         confidential_mint,
                         confidential_token_account,
                         token_vault,
@@ -487,7 +490,7 @@ fn unwrap(
                 accounts: Unwrap {
                     token_mint: *token_mint,
                     token_account,
-                    program_authority: ctw_token::authority::ID,
+                    program_authority: program_authority,
                     confidential_mint,
                     confidential_token_account,
                     token_vault,

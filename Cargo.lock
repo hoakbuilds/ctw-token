@@ -1226,7 +1226,6 @@ dependencies = [
  "ahash 0.8.6",
  "anchor-lang",
  "anchor-spl",
- "ellipsis-macros",
  "solana-logger",
  "solana-program",
  "solana-program-test",
@@ -1499,19 +1498,6 @@ name = "either"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a26ae43d7bcc3b814de94796a5e736d4029efb0ee900c12e2d54c993ad1a1e07"
-
-[[package]]
-name = "ellipsis-macros"
-version = "0.1.2"
-source = "git+https://github.com/Ellipsis-Labs/ellipsis-macros.git#142c920ce91b0e41bb06c833dea46269cc868d14"
-dependencies = [
- "bs58 0.4.0",
- "proc-macro2",
- "quote",
- "rustversion",
- "solana-program",
- "syn 1.0.109",
-]
 
 [[package]]
 name = "encode_unicode"

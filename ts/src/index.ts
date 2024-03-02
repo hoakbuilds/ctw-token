@@ -6,9 +6,14 @@ export const PROGRAM_ID = new PublicKey(
   "cwTokjpVjxBeytEXomNe5B38EesYsNsXCm3JZC6tmvB"
 );
 
-export const PROGRAM_AUTHORITY = new PublicKey(
-  "5txHjtUXKw716ZY4M5uCU7MG51htjMewqWr91uR8jyBz"
-);
+const AUTHORITY_SEED = "AUTHORITY";
+
+export const findAuthorityPda = (tokenMint: PublicKey) => {
+  PublicKey.findProgramAddressSync(
+    [Buffer.from(AUTHORITY_SEED, "utf-8")],
+    PROGRAM_ID
+  );
+};
 
 const MINT_SEED = "MINT";
 

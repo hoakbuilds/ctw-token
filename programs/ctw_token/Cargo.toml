@@ -23,8 +23,6 @@ ahash = "=0.8.6"
 anchor-lang = "0.29.0"
 anchor-spl = "0.29.0"
 
-ellipsis-macros = { git = "https://github.com/Ellipsis-Labs/ellipsis-macros.git" }
-
 solana-program = "~1.17"
 
 spl-token-2022 = { version = "1.0.0", features = ["zk-ops"] }
