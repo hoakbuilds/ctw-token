@@ -1,5 +1,5 @@
 import { Program } from "@coral-xyz/anchor";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { CtwToken, IDL } from "./program";
 
 export const PROGRAM_ID = new PublicKey(
@@ -37,8 +37,8 @@ export const initialize = async (
   tokenExtensionsProgram: PublicKey,
   systemProgram: PublicKey,
   auditorPublicKey: Buffer | Uint8Array
-) => {
-  await program.methods
+): Promise<TransactionInstruction> => {
+  return await program.methods
     .initialize([...auditorPublicKey])
     .accountsStrict({
       tokenMint,
@@ -66,8 +66,8 @@ export const wrap = async (
   tokenProgram: PublicKey,
   tokenExtensionsProgram: PublicKey,
   amount: number
-) => {
-  await program.methods
+): Promise<TransactionInstruction> => {
+  return await program.methods
     .wrap(amount)
     .accountsStrict({
       tokenMint,
@@ -96,8 +96,8 @@ export const unwrap = async (
   tokenProgram: PublicKey,
   tokenExtensionsProgram: PublicKey,
   amount: number
-) => {
-  await program.methods
+): Promise<TransactionInstruction> => {
+  return await program.methods
     .unwrap(amount)
     .accountsStrict({
       tokenMint,
