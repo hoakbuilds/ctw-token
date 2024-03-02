@@ -8,12 +8,12 @@ use {
         token_2022::{mint_to, MintTo},
         token_interface::{initialize_mint2, Mint, TokenInterface, TokenAccount, transfer_checked, TransferChecked},
     },
-    solana_program::{instruction::Instruction, program::invoke},
+    solana_program::{instruction::Instruction, program::invoke, program_option::COption},
     spl_token_2022::{
         check_program_account,
         extension::{
             confidential_transfer::instruction::{
-                ConfidentialTransferInstruction, InitializeMintData,
+                ConfidentialTransferInstruction, InitializeMintData, deposit
             },
             ExtensionType,
         },
@@ -24,7 +24,7 @@ use {
 };
 
 /// Utility function for encoding instruction data
-pub(crate) fn encode_instruction<T: Into<u8>, D: Pod>(
+fn encode_instruction<T: Into<u8>, D: Pod>(
     token_program_id: &Pubkey,
     accounts: Vec<AccountMeta>,
     token_instruction_type: TokenInstruction,
@@ -44,7 +44,7 @@ pub(crate) fn encode_instruction<T: Into<u8>, D: Pod>(
 /// Create a `InitializeMint` instruction
 /// This fn within spl-token-2022 is marked with target not os = solana,
 /// which makes it impossible for programs to initialize confidential transfers via cpi.
-pub fn initialize_confidential_transfer(
+fn initialize_confidential_transfer(
     token_program_id: &Pubkey,
     mint: &Pubkey,
     authority: Option<Pubkey>,
@@ -78,14 +78,11 @@ impl Id for TokenExtensions {
     }
 }
 
-pub const AUTHORITY_SEED: &'static str = "AUTHORITY";
-pub const MINT_SEED: &'static str = "MINT";
+const AUTHORITY_SEED: &'static str = "AUTHORITY";
+const MINT_SEED: &'static str = "MINT";
 
 #[program]
 pub mod ctw_token {
-    use solana_program::program_option::COption;
-    use spl_token_2022::extension::confidential_transfer::instruction::deposit;
-
     use super::*;
 
     /// Initialize a Confidential Transfer enabled Token Extensions Mint for an existing SPL Token Mint.
@@ -180,7 +177,7 @@ pub mod ctw_token {
     /// that has already been initialized and for which the [`ConfigureAccount`] as well as, if necessary,
     /// the [`ApproveAccount`] instructions have been executed.
     ///
-    /// After this instruction is called, the integrator is then free to call [`Deposit`] and [`ApplyPendingBalance`]
+    /// After this instruction is called, the integrator is then free to call [`ApplyPendingBalance`]
     /// in order to roll the token amount into the available balance of the Confidential Token Account.
     pub fn wrap(ctx: Context<Wrap>, amount: u64) -> Result<()> {
         // Transfer tokens from the source to the program's vault
