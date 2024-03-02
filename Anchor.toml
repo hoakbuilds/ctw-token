@@ -1,0 +1,24 @@
+[toolchain]
+
+[features]
+seeds = false
+skip-lint = false
+
+[programs.mainnet]
+ctw_token = "cwTokjpVjxBeytEXomNe5B38EesYsNsXCm3JZC6tmvB"
+
+[programs.devnet]
+ctw_token = "cwTokjpVjxBeytEXomNe5B38EesYsNsXCm3JZC6tmvB"
+
+[programs.testnet]
+ctw_token = "cwTokjpVjxBeytEXomNe5B38EesYsNsXCm3JZC6tmvB"
+
+[programs.localnet]
+ctw_token = "cwTokjpVjxBeytEXomNe5B38EesYsNsXCm3JZC6tmvB"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "devnet"
+wallet = "~/.config/solana/id.json"

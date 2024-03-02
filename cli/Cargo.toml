@@ -1,0 +1,31 @@
+[package]
+name = "ctw-token-cli"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[[bin]]
+name = "ctw-token-cli"
+path = "src/main.rs"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+arrayref = "0.3.7"
+
+clap = { version = "4.5.1", features = ["derive"] }
+ctw-token = { path = "../programs/ctw_token", features = ["client"] }
+
+solana-clap-utils = "~1.17"
+solana-client = "~1.17"
+solana-sdk = "~1.17"
+spl-associated-token-account = "2.3.0"
+
+thiserror = "1.0.57"

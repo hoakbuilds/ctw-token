@@ -1,0 +1,37 @@
+[package]
+name = "ctw-token"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "ctw_token"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+client = []
+
+[dependencies]
+# Without pinning `ahash` there is an issue with dependency versions
+ahash = "=0.8.6"
+
+anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+
+ellipsis-macros = { git = "https://github.com/Ellipsis-Labs/ellipsis-macros.git" }
+
+solana-program = "~1.17"
+
+spl-token-2022 = { version = "1.0.0", features = ["zk-ops"] }
+
+[dev-dependencies]
+solana-sdk = "~1.17"
+solana-logger = "~1.17"
+solana-program-test = "~1.17"
+
+spl-associated-token-account = "2.3.0"
