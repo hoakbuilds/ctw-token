@@ -25,3 +25,10 @@ The program features only three instructions:
 
 - The program is currently unable to be used in any of the clusters due to `zk-token-proof` not being present.
 - In order to successfully test the program using `solana-program-test`, the SPL Token Extensions Program had to be built locally with the `zk-ops` feature enabled and the output was used to override the `spl_token_2022` program available.
+
+
+## Tests
+
+In order to run the tests with `solana-program-test`:
+
+`cargo test-bpf --features client`
